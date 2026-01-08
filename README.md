@@ -51,13 +51,14 @@ Proyek ini memiliki arsitektur database yang efisien:
 ---
 ## 🔗 Link Penting
 
-* **Figma Design**: [Lihat Desain di Figma]([https://www.figma.com/design/0j8nQcSa6MoosYPlh3yxH7/Journee?node-id=0-1&t=7piCiu2DvAbMh6ap-1](https://www.figma.com/design/26JmEhNEQy0RbxPUsktjny/ABSENKU?node-id=0-1&t=4IWi59aBfiSIZ6xk-1))
+* **Figma Design**: [Lihat Desain di Figma:](https://www.figma.com/design/26JmEhNEQy0RbxPUsktjny/ABSENKU?node-id=0-1&t=4IWi59aBfiSIZ6xk-1)
 
 ---
 
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2026 **SUGIX**
+
 
 
 
