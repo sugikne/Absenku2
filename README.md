@@ -35,7 +35,7 @@ Aplikasi ini menggunakan stack teknologi modern:
 
 | Halaman Login | Beranda / Mata Kuliah | Verifikasi Lokasi | Riwayat Absen | verfikasi berhasil |
 | :---: | :---: | :---: | :---: | :---: |
-| <img src="gambar hasil/" width="200"> | <img src="https://via.placeholder.com/200x400?text=Home+Screen" width="200"> | <img src="https://via.placeholder.com/200x400?text=Verification" width="200"> | <img src="https://via.placeholder.com/200x400?text=History" width="200"> | <img src="https://via.placeholder.com/200x400?text=History" width="200"> |
+| <img src="img/4.jpeg" width="200"> | <img src="https://via.placeholder.com/200x400?text=Home+Screen" width="200"> | <img src="https://via.placeholder.com/200x400?text=Verification" width="200"> | <img src="https://via.placeholder.com/200x400?text=History" width="200"> | <img src="https://via.placeholder.com/200x400?text=History" width="200"> |
 
 > *Catatan: Ganti gambar di atas dengan screenshot asli aplikasi Anda setelah aplikasi dijalankan.*
 
@@ -53,5 +53,6 @@ Proyek ini memiliki arsitektur database yang efisien:
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2026 **SUGIX**
+
 
 
