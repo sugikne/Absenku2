@@ -35,7 +35,7 @@ Aplikasi ini menggunakan stack teknologi berikut:
 
 ## 📸 Screenshot
 
-| Beranda | Kamera | Kalender | Pengaturan |
+| Beranda | Verifikasi | History Absen | Profile |
 | :---: | :---: | :---: | :---: |
 | <img src="screenshot1.png" width="200"> | <img src="screenshot2.png" width="200"> | <img src="screenshot3.png" width="200"> | <img src="screenshot4.png" width="200"> |
 
@@ -59,3 +59,4 @@ Proyek ini disusun dengan dokumentasi teknis yang lengkap, meliputi:
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2025 **SUGIX**
+
