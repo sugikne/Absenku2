@@ -1,62 +1,56 @@
-# Journee - Personal Photo Journal App 🌟
-
-[![Flutter](https://img.shields.io/badge/Flutter-3.13-blue.svg)](https://flutter.dev/)
-[![Dart](https://img.shields.io/badge/Dart-3.1-blue.svg)](https://dart.dev/)
+# Absenku - Smart Attendance System 🎓
+<img src="assets/logo.png" width="200">  <img src="assets/logobiru.png" width="200">
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-blue.svg)](https://flutter.dev/)
+[![Supabase](https://img.shields.io/badge/Backend-Supabase-green.svg)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Journee** adalah aplikasi mobile berbasis Flutter yang dirancang untuk mencatat momen harian pengguna melalui integrasi foto, lokasi real-time, dan tampilan kalender yang interaktif.
+**Absenku** adalah aplikasi presensi mahasiswa berbasis mobile yang mengintegrasikan teknologi **Geofencing** dan **Biometric Photo Verification** untuk memastikan validitas kehadiran mahasiswa di lokasi perkuliahan.
 
 ---
 
 ## 🚀 Fitur Utama
 
-* **Ambil Foto 📸**: Integrasi kamera dengan fitur flash dan switch kamera depan/belakang.
-* **Upload dari Galeri 🖼️**: Kemudahan memilih foto dari galeri dan otomatis upload ke Cloudinary.
-* **Overlay Detail**: Navigasi cepat untuk melihat deskripsi, lokasi, koordinat, serta akses edit/delete tanpa pindah halaman.
-* **Deskripsi Foto 📝**: Personalisasi setiap foto dengan cerita atau catatan tambahan kapan saja.
-* **Lokasi Otomatis 🌍**: Penyimpanan koordinat (latitude & longitude) secara real-time yang dikonversi menjadi nama kota.
-* **Kalender Foto 🗓️**: Fitur tracking memori berdasarkan tanggal dengan indikator visual (marker merah) pada hari tertentu.
-* **UI Modern & Responsif**: Desain visual estetik menggunakan gradien, elemen gunung, dan awan untuk pengalaman pengguna yang nyaman.
+* **Custom Authentication 🔐**: Sistem login dan registrasi mahasiswa menggunakan tabel database PostgreSQL kustom di Supabase.
+* **Geofencing Verification 📍**: Deteksi lokasi real-time dengan penghitungan jarak (radius) antara posisi mahasiswa dan titik koordinat kelas.
+* **Photo Proof 📸**: Pengambilan foto bukti kehadiran langsung melalui kamera aplikasi untuk menghindari kecurangan.
+* **Supabase Storage Integration ☁️**: Foto bukti absen otomatis diunggah ke Supabase Storage secara terorganisir.
+* **Attendance History 🗓️**: Riwayat presensi lengkap yang tersinkronisasi otomatis menggunakan Database Triggers untuk transparansi data.
+* **Status Otomatis**: Penentuan status kehadiran ("Hadir" atau "Di luar radius") berdasarkan validasi lokasi sistem.
 
 ---
 
 ## 🛠️ Teknologi
 
-Aplikasi ini menggunakan stack teknologi berikut:
+Aplikasi ini menggunakan stack teknologi modern:
 
-* **Flutter & Dart**: Framework utama pengembangan aplikasi.
-* **Hive**: Database lokal untuk penyimpanan metadata foto yang cepat dan ringan.
-* **Camera & Image Picker**: Modul untuk menangkap dan memilih gambar.
-* **Geolocator & Geocoding**: Untuk penentuan koordinat presisi dan konversi nama lokasi.
-* **Cloudinary**: Solusi penyimpanan cloud untuk backup foto.
-* **TableCalendar**: Library untuk manajemen kalender yang interaktif.
+* **Flutter & Dart**: Framework utama untuk pengembangan Cross-Platform.
+* **Supabase**: Backend-as-a-Service (BaaS) untuk database PostgreSQL, Storage, dan RLS (Row Level Security).
+* **Geolocator**: Untuk mendapatkan koordinat presisi (latitude & longitude) mahasiswa.
+* **Camera API**: Untuk pengambilan foto verifikasi langsung dari perangkat.
+* **PostgreSQL Triggers**: Logika database untuk otomatisasi sinkronisasi data ke tabel riwayat.
 
 ---
 
-## 📸 Screenshot
+## 📸 Screenshot (Preview)
 
-| Beranda | Verifikasi | History Absen | Profile |
+| Halaman Login | Beranda / Mata Kuliah | Verifikasi Lokasi | Riwayat Absen |
 | :---: | :---: | :---: | :---: |
-| <img src="screenshot1.png" width="200"> | <img src="screenshot2.png" width="200"> | <img src="screenshot3.png" width="200"> | <img src="screenshot4.png" width="200"> |
+| <img src="https://via.placeholder.com/200x400?text=Login+Screen" width="200"> | <img src="https://via.placeholder.com/200x400?text=Home+Screen" width="200"> | <img src="https://via.placeholder.com/200x400?text=Verification" width="200"> | <img src="https://via.placeholder.com/200x400?text=History" width="200"> |
+
+> *Catatan: Ganti gambar di atas dengan screenshot asli aplikasi Anda setelah aplikasi dijalankan.*
 
 ---
 
-## 🏗️ Rancangan Arsitektur Sistem
+## 🏗️ Struktur Database
 
-Proyek ini disusun dengan dokumentasi teknis yang lengkap, meliputi:
-* **Use Case Diagram**: Pemetaan fungsi aplikasi terhadap pengguna.
-* **ERD (Entity Relationship Diagram)**: Struktur data metadata foto dan lokasi.
-* **System Flow**: Alur kerja sistem dari input hingga penyimpanan cloud.
-
----
-
-## 🔗 Link Penting
-
-* **Figma Design**: [Lihat Desain di Figma](https://www.figma.com/design/0j8nQcSa6MoosYPlh3yxH7/Journee?node-id=0-1&t=7piCiu2DvAbMh6ap-1)
+Proyek ini memiliki arsitektur database yang efisien:
+* **Table `users`**: Menyimpan data identitas mahasiswa (NIM, Nama, Email, Password).
+* **Table `attendance`**: Mencatat data transaksi absen yang masuk.
+* **Table `attendance_history`**: Tabel arsip riwayat yang diisi secara otomatis oleh sistem melalui Trigger.
 
 ---
 
 ## 📜 Lisensi
 
-Lisensi **MIT License** © 2025 **SUGIX**
+Lisensi **MIT License** © 2026 **SUGIX**
 
