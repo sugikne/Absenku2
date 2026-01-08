@@ -41,7 +41,7 @@ Aplikasi ini menggunakan stack teknologi modern:
 
 ---
 
-## 🏗️ Struktur Database
+## 📸 Rancangan Arsitektur Sistem
 
 Proyek ini memiliki arsitektur database yang efisien:
 * **Table `users`**: Menyimpan data identitas mahasiswa (NIM, Nama, Email, Password).
@@ -53,6 +53,7 @@ Proyek ini memiliki arsitektur database yang efisien:
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2026 **SUGIX**
+
 
 
 
