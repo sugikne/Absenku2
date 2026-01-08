@@ -1,5 +1,5 @@
 # Absenku - Smart Attendance System 🎓
-<img src="assets/logo.png" width="200"> | <img src="assets/logobiru.png" width="200">
+<img src="assets/logo.png" width="200">  <img src="assets/logobiru.png" width="200">
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-blue.svg)](https://flutter.dev/)
 [![Supabase](https://img.shields.io/badge/Backend-Supabase-green.svg)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -53,3 +53,4 @@ Proyek ini memiliki arsitektur database yang efisien:
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2026 **SUGIX**
+
