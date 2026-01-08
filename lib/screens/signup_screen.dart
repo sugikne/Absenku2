@@ -28,34 +28,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // ================= SIGN UP LOGIC =================
   Future<void> _handleSignUp() async {
-    // Validasi input
-    if (_namaC.text.trim().isEmpty ||
-        _nimC.text.trim().isEmpty ||
-        _emailC.text.trim().isEmpty ||
-        _passwordC.text.trim().length < 6) {
+    // 1. Validasi input secara lokal
+    final nama = _namaC.text.trim();
+    final nim = _nimC.text.trim();
+    final email = _emailC.text.trim();
+    final password = _passwordC.text.trim();
+
+    if (nama.isEmpty || nim.isEmpty || email.isEmpty || password.length < 6) {
       _showSnack("Lengkapi data dan password minimal 6 karakter", isError: true);
+      return;
+    }
+
+    // Validasi format email sederhana
+    if (!email.contains('@')) {
+      _showSnack("Format email tidak valid", isError: true);
       return;
     }
 
     setState(() => isLoading = true);
 
     try {
-      // 1. Melakukan pendaftaran via AuthService
+      // 2. Melakukan pendaftaran via AuthService
+      // Pastikan fungsi signUp di AuthService Anda mengembalikan void atau data user
       await AuthService().signUp(
-        nama: _namaC.text.trim(),
-        nim: _nimC.text.trim(),
-        email: _emailC.text.trim(),
-        password: _passwordC.text.trim(),
+        nama: nama,
+        nim: nim,
+        email: email,
+        password: password,
       );
 
       if (!mounted) return;
 
-      // 2. Berhasil: Pindah ke Home dan kirim nama untuk ditampilkan di branda
-      // Gunakan pushAndRemoveUntil agar user tidak bisa back ke halaman daftar
+      // 3. Berhasil: Langsung arahkan ke HomeScreen
+      // Kita menggunakan pushAndRemoveUntil agar user tidak bisa 'back' ke halaman SignUp
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (_) => HomeScreen(displayName: _namaC.text.trim()),
+          builder: (_) => HomeScreen(displayName: nama),
         ),
         (route) => false,
       );
@@ -63,7 +72,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } catch (e) {
       debugPrint("SignUp Error: $e");
       if (mounted) {
-        _showSnack("Pendaftaran gagal: $e", isError: true);
+        // Menangani error spesifik dari database (misal NIM atau Email sudah terdaftar)
+        String errorMsg = e.toString();
+        if (errorMsg.contains("users_email_key")) {
+          errorMsg = "Email sudah terdaftar";
+        } else if (errorMsg.contains("users_nim_key")) {
+          errorMsg = "NIM sudah terdaftar";
+        } else {
+          errorMsg = "Pendaftaran gagal, silakan coba lagi";
+        }
+        _showSnack(errorMsg, isError: true);
       }
     } finally {
       if (mounted) setState(() => isLoading = false);

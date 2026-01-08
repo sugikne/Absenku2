@@ -2,11 +2,12 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart'; 
+import 'package:latlong2/latlong.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../main.dart';
+import '../services/auth_service.dart'; // Sesuaikan folder jika berbeda
 import 'home_screen.dart';
 
 class AttendanceVerificationScreen extends StatefulWidget {
@@ -129,7 +130,7 @@ class _AttendanceVerificationScreenState extends State<AttendanceVerificationScr
         _currentPosition = pos;
         lokasiUserReal = LatLng(pos.latitude, pos.longitude);
         _distanceInMeters = dist;
-        _isInRange = dist <= 100; 
+        _isInRange = dist <= 100;
         _isLoading = false;
       });
 
@@ -142,83 +143,74 @@ class _AttendanceVerificationScreenState extends State<AttendanceVerificationScr
     }
   }
 
-  Future<void> _finalVerifikasi() async {
-    // Menggunakan currentUser secara langsung tanpa refreshSession yang memicu error
-    final user = supabase.auth.currentUser;
+Future<void> _finalVerifikasi() async {
+  // ✅ Mengambil ID dari AuthService kustom Anda (bukan Supabase Auth)
+  final String? currentUserId = AuthService.userId;
 
-    if (user == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Sesi tidak valid. Mohon Re-Login."))
-        );
-      }
-      return;
+  if (currentUserId == null) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Sesi tidak valid. Silakan Login ulang."))
+      );
     }
-
-    if (_capturedImage == null || _currentPosition == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Data tidak lengkap")));
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      final now = DateTime.now();
-      final String formattedDate = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
-      final String formattedTime = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
-
-      final String namaUser = user.userMetadata?['nama'] ?? "Mahasiswa";
-      final String nimUser = user.userMetadata?['nim'] ?? "-";
-
-      // 1. Upload foto ke Storage
-      String fileName = "${user.id}/${now.millisecondsSinceEpoch}.jpg";
-      final bytes = await File(_capturedImage!.path).readAsBytes();
-      
-      await supabase.storage
-          .from('attendance_photos')
-          .uploadBinary(
-            fileName, 
-            bytes, 
-            fileOptions: const FileOptions(contentType: 'image/jpeg', upsert: true)
-          );
-
-      final String photoUrl = supabase.storage.from('attendance_photos').getPublicUrl(fileName);
-
-      // 2. Insert Database
-      await supabase.from('attendance').insert({
-        'user_id': user.id,
-        'course_name': widget.course.namaMatkul,
-        'lecturer_name': widget.course.namaDosen,
-        'date': formattedDate,
-        'time': formattedTime,
-        'latitude': _currentPosition!.latitude,
-        'longitude': _currentPosition!.longitude,
-        'distance': _distanceInMeters,
-        'photo_url': photoUrl,
-        'status': _isInRange ? "Hadir" : "Di luar radius",
-        'user_name': namaUser,
-        'nim': nimUser,
-      });
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _isSuccess = true;
-        });
-        await Future.delayed(const Duration(seconds: 2));
-        if (mounted) Navigator.pop(context, true);
-      }
-
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Terjadi kesalahan: $e"), backgroundColor: Colors.red)
-        );
-      }
-    }
+    return;
   }
 
+  setState(() => _isLoading = true);
+
+  try {
+    final now = DateTime.now();
+    final String formattedDate = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    final String formattedTime = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
+
+    // 1. Upload foto ke Storage (Gunakan ID dari AuthService)
+    String fileName = "$currentUserId/${now.millisecondsSinceEpoch}.jpg";
+    final bytes = await File(_capturedImage!.path).readAsBytes();
+    
+    await supabase.storage
+        .from('attendance')
+        .uploadBinary(
+          fileName, 
+          bytes, 
+          fileOptions: const FileOptions(contentType: 'image/jpeg', upsert: true)
+        );
+
+    final String photoUrl = supabase.storage.from('attendance').getPublicUrl(fileName);
+
+    // 2. Insert ke tabel attendance
+    await supabase.from('attendance').insert({
+      'user_id': currentUserId, // ID dari AuthService kustom
+      'course_name': widget.course.namaMatkul,
+      'lecturer_name': widget.course.namaDosen,
+      'date': formattedDate,
+      'time': formattedTime,
+      'latitude': _currentPosition!.latitude,
+      'longitude': _currentPosition!.longitude,
+      'distance': _distanceInMeters,
+      'photo_url': photoUrl,
+      'status': _isInRange ? "Hadir" : "Di luar radius",
+      'user_name': AuthService.nama, // Data dari AuthService kustom
+      'nim': AuthService.nim,       // Data dari AuthService kustom
+    });
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+        _isSuccess = true;
+      });
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) Navigator.pop(context, true);
+    }
+
+  } catch (e) {
+    if (mounted) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red)
+      );
+    }
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

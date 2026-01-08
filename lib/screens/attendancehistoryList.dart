@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../services/auth_service.dart'; // ✅ Import AuthService kustom Anda
 
 class AttendanceHistoryList extends StatefulWidget {
   const AttendanceHistoryList({super.key});
 
   @override
-  State<AttendanceHistoryList> createState() =>
-      _AttendanceHistoryListState();
+  State<AttendanceHistoryList> createState() => _AttendanceHistoryListState();
 }
 
-class _AttendanceHistoryListState
-    extends State<AttendanceHistoryList> {
+class _AttendanceHistoryListState extends State<AttendanceHistoryList> {
   final supabase = Supabase.instance.client;
   List<Map<String, dynamic>> attendanceList = [];
   bool isLoading = true;
@@ -22,36 +21,46 @@ class _AttendanceHistoryListState
   }
 
   Future<void> _fetchAttendance() async {
-    final user = supabase.auth.currentUser;
+    // ✅ PERBAIKAN: Ambil ID dari AuthService, bukan supabase.auth
+    final String? currentUserId = AuthService.userId;
 
-    debugPrint("AUTH user id: ${user?.id}");
+    debugPrint("AuthService User ID: $currentUserId");
 
-    if (user == null) {
-      debugPrint("❌ User belum login");
-      setState(() => isLoading = false);
+    if (currentUserId == null) {
+      debugPrint("❌ User belum login (Sesi AuthService Kosong)");
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
       return;
     }
 
-    setState(() => isLoading = true);
+    if (mounted) setState(() => isLoading = true);
 
     try {
+      // Mengambil data dari tabel history berdasarkan user_id kustom
       final data = await supabase
-          .from('attendance_history') // ✅ TABEL HISTORY
+          .from('attendance_history') 
           .select()
-          .eq('user_id', user.id) // ✅ FILTER SESUAI USER LOGIN
+          .eq('user_id', currentUserId) // ✅ Filter sesuai ID yang login
           .order('date', ascending: false)
           .order('time', ascending: false);
 
-      debugPrint("📦 RAW DATA: $data");
+      debugPrint("📦 RAW DATA HISTORY: $data");
 
-      setState(() {
-        attendanceList =
-            List<Map<String, dynamic>>.from(data);
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          attendanceList = List<Map<String, dynamic>>.from(data);
+          isLoading = false;
+        });
+      }
     } catch (e) {
       debugPrint("🔥 ERROR FETCH HISTORY: $e");
-      setState(() => isLoading = false);
+      if (mounted) {
+        setState(() => isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal mengambil data: $e")),
+        );
+      }
     }
   }
 
@@ -86,24 +95,17 @@ class _AttendanceHistoryListState
                     itemBuilder: (context, index) {
                       final item = attendanceList[index];
 
-                      final String courseName =
-                          item['course_name'] ?? "Matakuliah";
-                      final String status =
-                          item['status'] ?? "Hadir";
-                      final String date =
-                          item['date']?.toString() ?? "-";
-                      final String time =
-                          item['time']?.toString() ?? "-";
-                      final String photoUrl =
-                          item['photo_url'] ?? "";
+                      final String courseName = item['course_name'] ?? "Matakuliah";
+                      final String status = item['status'] ?? "Hadir";
+                      final String date = item['date']?.toString() ?? "-";
+                      final String time = item['time']?.toString() ?? "-";
+                      final String photoUrl = item['photo_url'] ?? "";
 
                       return Card(
                         elevation: 0.5,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12),
@@ -113,49 +115,25 @@ class _AttendanceHistoryListState
                               const SizedBox(width: 15),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       courseName,
                                       style: const TextStyle(
-                                        fontWeight:
-                                            FontWeight.bold,
+                                        fontWeight: FontWeight.bold,
                                         fontSize: 15,
                                       ),
                                     ),
                                     const SizedBox(height: 5),
                                     Row(
                                       children: [
-                                        const Icon(
-                                          Icons.calendar_month,
-                                          size: 14,
-                                          color: Colors.grey,
-                                        ),
+                                        const Icon(Icons.calendar_month, size: 14, color: Colors.grey),
                                         const SizedBox(width: 4),
-                                        Text(
-                                          date,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color:
-                                                Colors.grey,
-                                          ),
-                                        ),
+                                        Text(date, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                                         const SizedBox(width: 10),
-                                        const Icon(
-                                          Icons.access_time,
-                                          size: 14,
-                                          color: Colors.grey,
-                                        ),
+                                        const Icon(Icons.access_time, size: 14, color: Colors.grey),
                                         const SizedBox(width: 4),
-                                        Text(
-                                          time,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color:
-                                                Colors.grey,
-                                          ),
-                                        ),
+                                        Text(time, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                                       ],
                                     ),
                                   ],
@@ -181,8 +159,17 @@ class _AttendanceHistoryListState
               width: 55,
               height: 55,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) =>
-                  _imagePlaceholder(),
+              errorBuilder: (_, __, ___) => _imagePlaceholder(),
+              // ✅ Menambahkan loading builder agar lebih halus
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  width: 55,
+                  height: 55,
+                  color: Colors.grey[100],
+                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                );
+              },
             )
           : _imagePlaceholder(),
     );
@@ -193,28 +180,27 @@ class _AttendanceHistoryListState
       width: 55,
       height: 55,
       color: Colors.grey[200],
-      child:
-          const Icon(Icons.person, color: Colors.grey),
+      child: const Icon(Icons.image_not_supported, color: Colors.grey),
     );
   }
 
   Widget _buildStatusBadge(String status) {
-    final isHadir = status.toLowerCase() == "hadir";
+    // Normalisasi status untuk pewarnaan
+    final s = status.toLowerCase();
+    Color color = Colors.orange;
+    if (s == "hadir") color = Colors.green;
+    if (s.contains("luar")) color = Colors.red;
+
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: isHadir
-            ? Colors.green.withOpacity(0.1)
-            : Colors.orange.withOpacity(0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         status.toUpperCase(),
         style: TextStyle(
-          color: isHadir
-              ? Colors.green
-              : Colors.orange,
+          color: color,
           fontWeight: FontWeight.bold,
           fontSize: 10,
         ),
@@ -225,17 +211,13 @@ class _AttendanceHistoryListState
   Widget _buildEmptyState() {
     return Center(
       child: Column(
-        mainAxisAlignment:
-            MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.history_outlined,
-              size: 70,
-              color: Colors.grey[300]),
+          Icon(Icons.history_outlined, size: 70, color: Colors.grey[300]),
           const SizedBox(height: 10),
           const Text(
             "Belum ada riwayat absensi",
-            style:
-                TextStyle(color: Colors.grey),
+            style: TextStyle(color: Colors.grey),
           ),
         ],
       ),
