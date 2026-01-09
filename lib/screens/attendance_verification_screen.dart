@@ -33,7 +33,7 @@ class _AttendanceVerificationScreenState extends State<AttendanceVerificationScr
   LatLng? lokasiUserReal;
 
   Position? _currentPosition;
-  final LatLng lokasiKampus = const LatLng(-8.6621907, 115.2476819); 
+  final LatLng lokasiKampus = const LatLng(-8.6897259,115.2378907); // Ubah Lokasi sesuai Lokasi kampus cg
   final MapController _mapController = MapController();
   final supabase = Supabase.instance.client;
 
