@@ -45,7 +45,7 @@ Aplikasi ini menggunakan stack teknologi modern:
 
 | activity Diagram | Squence diagram | Diagram class |
 | :---: | :---: | :---: |
-| <img src="img/activity diagram.jpg" width="200"> | <img src="img/Sequence Diagram.jpg" width="200"> | <img src="img/pbm(1).jpg" width="200"> | 
+| <img src="img/activity diagram.jpg" width="200"> | <img src="img/Sequence Diagram.jpg" width="200"> | <img src="img/pbm (1).jpg" width="200"> | 
 
 ---
 ## 🔗 Link Penting
@@ -57,6 +57,7 @@ Aplikasi ini menggunakan stack teknologi modern:
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2026 **SUGIX**
+
 
 
 
