@@ -43,10 +43,9 @@ Aplikasi ini menggunakan stack teknologi modern:
 
 ## 📸 Rancangan Arsitektur Sistem
 
-Proyek ini memiliki arsitektur database yang efisien:
-* **Table `users`**: Menyimpan data identitas mahasiswa (NIM, Nama, Email, Password).
-* **Table `attendance`**: Mencatat data transaksi absen yang masuk.
-* **Table `attendance_history`**: Tabel arsip riwayat yang diisi secara otomatis oleh sistem melalui Trigger.
+| activity Diagram | Squence diagram | Diagram class |
+| :---: | :---: | :---: |
+| <img src="img/activity diagram.jpg" width="200"> | <img src="img/Sequence Diagram.jpg" width="200"> | <img src="img/pbm(1).jpg" width="200"> | 
 
 ---
 ## 🔗 Link Penting
@@ -58,6 +57,7 @@ Proyek ini memiliki arsitektur database yang efisien:
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2026 **SUGIX**
+
 
 
 
