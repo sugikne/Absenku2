@@ -35,13 +35,13 @@ Aplikasi ini menggunakan stack teknologi modern:
 
 | Halaman Login | Beranda / Mata Kuliah | Verifikasi Lokasi | Riwayat Absen | verfikasi berhasil |
 | :---: | :---: | :---: | :---: | :---: |
-| <img src="gambar hasil/" width="200"> | <img src="https://via.placeholder.com/200x400?text=Home+Screen" width="200"> | <img src="https://via.placeholder.com/200x400?text=Verification" width="200"> | <img src="https://via.placeholder.com/200x400?text=History" width="200"> | <img src="https://via.placeholder.com/200x400?text=History" width="200"> |
+| <img src="img/4.jpeg" width="200"> | <img src="img/3.jpeg" width="200"> | <img src="img/1.jpeg" width="200"> | <img src="img/2.jpeg" width="200"> | <img src="img/5.jpeg" width="200"> |
 
 > *Catatan: Ganti gambar di atas dengan screenshot asli aplikasi Anda setelah aplikasi dijalankan.*
 
 ---
 
-## 🏗️ Struktur Database
+## 📸 Rancangan Arsitektur Sistem
 
 Proyek ini memiliki arsitektur database yang efisien:
 * **Table `users`**: Menyimpan data identitas mahasiswa (NIM, Nama, Email, Password).
@@ -49,9 +49,20 @@ Proyek ini memiliki arsitektur database yang efisien:
 * **Table `attendance_history`**: Tabel arsip riwayat yang diisi secara otomatis oleh sistem melalui Trigger.
 
 ---
+## 🔗 Link Penting
+
+* **Figma Design**: [Lihat Desain di Figma:](https://www.figma.com/design/26JmEhNEQy0RbxPUsktjny/ABSENKU?node-id=0-1&t=4IWi59aBfiSIZ6xk-1)
+
+---
 
 ## 📜 Lisensi
 
 Lisensi **MIT License** © 2026 **SUGIX**
+
+
+
+
+
+
 
 
